@@ -17,11 +17,19 @@ module.exports = {
     replace({
       'process.env.NODE_ENV': JSON.stringify(NODE_ENV)
     }),
+    resolve({
+      module: true,
+      main: true,
+      browser: true,
+      jsnext: true,
+      preferBuiltins: true
+    }),
+    commonjs({
+      include: "node_modules/**"
+    }),
     babel({
       exclude: 'node_modules/**'
     }),
-    resolve(),
-    commonjs(),
     uglify()
   ]
 };
