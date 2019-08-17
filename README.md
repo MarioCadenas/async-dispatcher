@@ -106,3 +106,9 @@ The problem is that we have a dependency with the full todo list. So if we reloa
 the page, we will not have the data. And we will not be able to display the component correctly.
 
 We can solve this by fetching all data in the top component, but that is not efficient.
+
+## TODO
+
+- [ ] Make an easy way to update cache, so you can decide when to refetch an action.
+- [ ] Improve documentation
+- [ ] Make error and loading properties to be optional, so user can manage it in the component.
