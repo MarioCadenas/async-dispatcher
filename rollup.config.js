@@ -2,6 +2,7 @@ const replace = require('rollup-plugin-replace');
 const resolve = require('rollup-plugin-node-resolve');
 const babel = require('rollup-plugin-babel');
 const commonjs = require('rollup-plugin-commonjs');
+const alias = require('rollup-plugin-alias');
 const { uglify } = require('rollup-plugin-uglify');
 
 const NODE_ENV = process.env.NODE_ENV || 'development';
@@ -14,6 +15,9 @@ module.exports = {
   },
   external: ['react'],
   plugins: [
+    alias({
+      '@': './src'
+    }),
     replace({
       'process.env.NODE_ENV': JSON.stringify(NODE_ENV)
     }),
@@ -25,7 +29,7 @@ module.exports = {
       preferBuiltins: true
     }),
     commonjs({
-      include: "node_modules/**"
+      include: 'node_modules/**'
     }),
     babel({
       exclude: 'node_modules/**'

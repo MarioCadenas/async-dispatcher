@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, waitForElement, findByTestId, act } from '@testing-library/react';
-import asyncConnect from '../connect-async';
-import Cache from '../cache';
+import asyncConnect from '@/connect-async';
+import Cache from '@/cache';
 
 const setup = () => {
   const componentTestId = 'my-component';

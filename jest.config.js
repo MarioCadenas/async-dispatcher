@@ -6,8 +6,8 @@ module.exports = {
   collectCoverage: true,
   collectCoverageFrom: ['src/**/*.{js,jsx}'],
   testPathIgnorePatterns: ['<rootDir>/node_modules/'],
-  testMatch: ['<rootDir>/src/**/?(*.)(spec|test).js?(x)'],
-  setupFilesAfterEnv: ['<rootDir>/src/__tests__/config/setupTests.js'],
+  testMatch: ['<rootDir>/**/?(*.)(spec|test).js?(x)'],
+  setupFilesAfterEnv: ['<rootDir>/__tests__/config/setupTests.js'],
   moduleNameMapper: {
     '@/(.*)$': '<rootDir>/src/$1'
   }

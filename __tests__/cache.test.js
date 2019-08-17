@@ -1,4 +1,4 @@
-import Cache from '../cache';
+import Cache from '@/cache';
 
 describe('Cache', () => {
   it('should be an object', () => {
