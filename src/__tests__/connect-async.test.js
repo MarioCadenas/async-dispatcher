@@ -3,8 +3,6 @@ import { render, waitForElement, findByTestId, act } from '@testing-library/reac
 import asyncConnect from '../connect-async';
 import Cache from '../cache';
 
-asyncConnect.dispatch = () => {};
-
 const setup = () => {
   const componentTestId = 'my-component';
   const MyComponent = props => <div data-testid={componentTestId}>My super component</div>;

@@ -1,6 +1,3 @@
-const isTestingEnvironment = process.env.NODE_ENV === 'test';
-const removeAll = () => Cache.storage.clear();
-
 const Cache = {
   storage: new Set(),
   contains(action) {
@@ -11,8 +8,7 @@ const Cache = {
   },
   removeAction(action) {
     return this.storage.delete(action);
-  },
-  ...(isTestingEnvironment && { removeAll })
+  }
 };
 
 export default Cache;
