@@ -3,16 +3,28 @@ const resolve = require('rollup-plugin-node-resolve');
 const babel = require('rollup-plugin-babel');
 const commonjs = require('rollup-plugin-commonjs');
 const alias = require('rollup-plugin-alias');
-const { uglify } = require('rollup-plugin-uglify');
+const { terser } = require('rollup-plugin-terser');
+const pkg = require('./package.json');
 
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
 module.exports = {
   input: 'src/index.js',
-  output: {
-    file: './build/bundle.js',
-    format: 'cjs'
-  },
+  output: [
+    {
+      file: pkg.main,
+      format: 'cjs'
+    },
+    {
+      file: pkg.module,
+      format: 'es'
+    },
+    {
+      name: 'async-dispatcher',
+      file: pkg.browser,
+      format: 'umd'
+    }
+  ],
   external: ['react'],
   plugins: [
     alias({
@@ -21,19 +33,11 @@ module.exports = {
     replace({
       'process.env.NODE_ENV': JSON.stringify(NODE_ENV)
     }),
-    resolve({
-      module: true,
-      main: true,
-      browser: true,
-      jsnext: true,
-      preferBuiltins: true
-    }),
+    resolve(),
     commonjs({
       include: 'node_modules/**'
     }),
-    babel({
-      exclude: 'node_modules/**'
-    }),
-    uglify()
+    babel(),
+    terser()
   ]
 };
