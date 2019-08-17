@@ -1,7 +1,14 @@
 {
   "name": "@mariocadenas/async-dispatcher",
   "version": "1.0.0",
-  "description": "",
+  "description": "Higher Order Component to easily manage asynchronous redux actions",
+  "keywords": [
+    "redux",
+    "async-redux",
+    "connect-async",
+    "async-actions",
+    "async-dispatch"
+  ],
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "browser": "dist/index.umd.js",
@@ -15,10 +22,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MarioCadenas/async-dispatcher.git"
+    "url": "https://github.com/MarioCadenas/async-dispatcher.git"
   },
   "author": "Mario Cadenas",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/MarioCadenas/async-dispatcher/issues"
   },
