@@ -32,18 +32,13 @@ import { connect } from 'react-redux';
 import { fetchTodos } from '@/actions/todos';
 import ToDos from '@/components/todos';
 
-const mapStateToProps = state => ({
-  todos: state.todos
-});
-const ToDosConnected = connect(mapStateToProps)(ToDos);
-
-const mapAsyncDispatch = dispatch => ({
+const mapStateToProps = state => ({ todos: state.todos });
+const mapAsyncDispatch = {
   error: e => <div>Error!</div>,
   loading: () => <div>Loading...</div>,
-  actions: {
-    fetchTodos: () => dispatch(fetchTodos())
-  }
-});
+  actions: { fetchTodos }
+};
+const ToDosConnected = connect(mapStateToProps)(ToDos);
 
 export default asyncConnect(mapAsyncDispatch)(ToDosConnected);
 ```
