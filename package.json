@@ -15,14 +15,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MarioCadenas/async-redux-dispatcher.git"
+    "url": "git+https://github.com/MarioCadenas/async-dispatcher.git"
   },
   "author": "Mario Cadenas",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/MarioCadenas/async-redux-dispatcher/issues"
+    "url": "https://github.com/MarioCadenas/async-dispatcher/issues"
   },
-  "homepage": "https://github.com/MarioCadenas/async-redux-dispatcher#readme",
+  "homepage": "https://github.com/MarioCadenas/async-dispatcher#readme",
   "peerDependencies": {
     "react": "^16.8.0"
   },
