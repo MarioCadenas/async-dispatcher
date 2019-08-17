@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import Cache from './cache';
+import Cache from '@/cache';
 
-function asyncConnect(mapAsyncDispatch) {
-  const asyncActions = mapAsyncDispatch(asyncConnect.dispatch);
-  const actions = Object.keys(asyncActions.actions);
+function asyncDispatcher(mapAsyncDispatch) {
+  const actions = Object.keys(mapAsyncDispatch.actions);
 
   return Component => {
     const WrappedComponent = props => {
@@ -17,7 +16,7 @@ function asyncConnect(mapAsyncDispatch) {
         async function dispatchAsyncActions() {
           try {
             const dispatchedActions = actionsToCall.map(async action =>
-              asyncActions.actions[action]()
+              asyncDispatcher.dispatch(mapAsyncDispatch.actions[action]())
             );
             await Promise.all(dispatchedActions);
             setLoading(false);
@@ -29,11 +28,11 @@ function asyncConnect(mapAsyncDispatch) {
       }, [setLoading, setError]);
 
       if (loading && !error) {
-        return asyncActions.loading();
+        return mapAsyncDispatch.loading();
       }
 
       if (error) {
-        return asyncActions.error(error);
+        return mapAsyncDispatch.error(error);
       }
 
       return <Component loading={loading} error={error} {...props} />;
@@ -45,4 +44,4 @@ function asyncConnect(mapAsyncDispatch) {
   };
 }
 
-export default asyncConnect;
+export default asyncDispatcher;

@@ -1,7 +1,6 @@
 import React from 'react';
 import { render, waitForElement, findByTestId, act } from '@testing-library/react';
-import asyncConnect from '@/connect-async';
-import Cache from '@/cache';
+import asyncDispatch from '@/async-dispatch';
 
 const setup = () => {
   const componentTestId = 'my-component';
@@ -22,18 +21,14 @@ const setup = () => {
   const asyncError = () => {
     throw new Error('error');
   };
-  const mapAsyncDispatchWithErrorFunction = dispatch => ({
+  const mapAsyncDispatchWithErrorFunction = {
     ...loaderAndError,
-    actions: {
-      errorFunction: () => dispatch(asyncError())
-    }
-  });
-  const mapAsyncDispatchWithSuccessfulFunction = dispatch => ({
+    actions: { asyncError }
+  };
+  const mapAsyncDispatchWithSuccessfulFunction = {
     ...loaderAndError,
-    actions: {
-      foo: () => dispatch(asyncFunction())
-    }
-  });
+    actions: { asyncFunction }
+  };
 
   return {
     MyComponent,
@@ -47,26 +42,22 @@ const setup = () => {
   };
 };
 
-describe('asyncConnect', () => {
-  beforeEach(() => {
-    Cache.removeAll();
-  });
-
+describe('asyncDispatch', () => {
   it('should return a function', () => {
-    const mapAsyncDispatch = () => ({
+    const mapAsyncDispatch = {
       loading: null,
       error: null,
       actions: {}
-    });
-    const result = asyncConnect(mapAsyncDispatch);
+    };
+    const result = asyncDispatch(mapAsyncDispatch);
 
     expect(typeof result).toBe('function');
   });
 
-  describe('asyncConnect integration', () => {
+  describe('asyncDispatch integration', () => {
     it('should return loading component while promises resolve', async () => {
       const { MyComponent, mapAsyncDispatchWithSuccessfulFunction, loaderTestId } = setup();
-      const AsyncComponent = asyncConnect(mapAsyncDispatchWithSuccessfulFunction)(MyComponent);
+      const AsyncComponent = asyncDispatch(mapAsyncDispatchWithSuccessfulFunction)(MyComponent);
       const { container } = render(<AsyncComponent />);
 
       await waitForElement(
@@ -81,7 +72,7 @@ describe('asyncConnect', () => {
 
     it('should return the component after promises are resolved', async () => {
       const { mapAsyncDispatchWithSuccessfulFunction, MyComponent, componentTestId } = setup();
-      const AsyncComponent = asyncConnect(mapAsyncDispatchWithSuccessfulFunction)(MyComponent);
+      const AsyncComponent = asyncDispatch(mapAsyncDispatchWithSuccessfulFunction)(MyComponent);
       const { container } = render(<AsyncComponent />);
 
       await waitForElement(
@@ -96,7 +87,7 @@ describe('asyncConnect', () => {
 
     it('should throw an error if any of the promises throws an error', async () => {
       const { MyComponent, mapAsyncDispatchWithErrorFunction, errorTestId } = setup();
-      const AsyncComponent = asyncConnect(mapAsyncDispatchWithErrorFunction)(MyComponent);
+      const AsyncComponent = asyncDispatch(mapAsyncDispatchWithErrorFunction)(MyComponent);
       const { container } = render(<AsyncComponent />);
 
       await waitForElement(
@@ -113,15 +104,15 @@ describe('asyncConnect', () => {
       const { MyComponent } = setup();
       const action1 = jest.fn();
       const action2 = jest.fn();
-      const mapAsyncDispatch = () => ({
+      const mapAsyncDispatch = {
         loading: () => '',
         error: () => '',
         actions: {
           action1,
           action2
         }
-      });
-      const AsyncComponent = asyncConnect(mapAsyncDispatch)(MyComponent);
+      };
+      const AsyncComponent = asyncDispatch(mapAsyncDispatch)(MyComponent);
 
       await act(async () => render(<AsyncComponent />));
 
@@ -133,16 +124,16 @@ describe('asyncConnect', () => {
       const { MyComponent, loaderAndError } = setup();
       const action1 = jest.fn();
       const action2 = jest.fn();
-      const mapAsyncDispatch1 = () => ({
+      const mapAsyncDispatch1 = {
         ...loaderAndError,
         actions: { action1 }
-      });
-      const mapAsyncDispatch2 = () => ({
+      };
+      const mapAsyncDispatch2 = {
         ...loaderAndError,
         actions: { action1: action2 }
-      });
-      const AsyncComponent = asyncConnect(mapAsyncDispatch1)(MyComponent);
-      const AsyncComponent2 = asyncConnect(mapAsyncDispatch2)(MyComponent);
+      };
+      const AsyncComponent = asyncDispatch(mapAsyncDispatch1)(MyComponent);
+      const AsyncComponent2 = asyncDispatch(mapAsyncDispatch2)(MyComponent);
 
       await act(async () => render(<AsyncComponent />));
       await act(async () => render(<AsyncComponent2 />));
