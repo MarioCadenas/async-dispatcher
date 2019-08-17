@@ -1,6 +1,6 @@
 {
   "name": "@mariocadenas/async-dispatcher",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Higher Order Component to easily manage asynchronous redux actions",
   "keywords": [
     "redux",
