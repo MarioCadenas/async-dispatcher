@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import cache, { cacheAction } from './cache';
+import Cache from './cache';
 
-export default function asyncConnect(mapAsyncDispatch) {
+function asyncConnect(mapAsyncDispatch) {
   const asyncActions = mapAsyncDispatch(asyncConnect.dispatch);
   const actions = Object.keys(asyncActions.actions);
 
@@ -9,14 +9,16 @@ export default function asyncConnect(mapAsyncDispatch) {
     const WrappedComponent = props => {
       const [loading, setLoading] = useState(true);
       const [error, setError] = useState(null);
-      const actionsToCall = actions.filter(action => !cache.has(action));
+      const actionsToCall = actions.filter(action => !Cache.contains(action));
 
-      actions.forEach(cacheAction);
+      actions.forEach(Cache.cacheAction.bind(Cache));
 
       useEffect(() => {
         async function dispatchAsyncActions() {
           try {
-            const dispatchedActions = actionsToCall.map(action => asyncActions.actions[action]());
+            const dispatchedActions = actionsToCall.map(async action =>
+              asyncActions.actions[action]()
+            );
             await Promise.all(dispatchedActions);
             setLoading(false);
           } catch (e) {
@@ -24,14 +26,14 @@ export default function asyncConnect(mapAsyncDispatch) {
           }
         }
         dispatchAsyncActions();
-      }, [setLoading]);
+      }, [setLoading, setError]);
 
-      if (loading) {
+      if (loading && !error) {
         return asyncActions.loading();
       }
 
       if (error) {
-        return error;
+        return asyncActions.error(error);
       }
 
       return <Component loading={loading} error={error} {...props} />;
@@ -42,3 +44,5 @@ export default function asyncConnect(mapAsyncDispatch) {
     return WrappedComponent;
   };
 }
+
+export default asyncConnect;
