@@ -3,7 +3,7 @@
 ## Install
 
 ```bash
-npm install --save-dev @mariocadenas/async-dispatcher
+npm install @mariocadenas/async-dispatcher
 ```
 
 ## Usage
