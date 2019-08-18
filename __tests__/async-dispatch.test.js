@@ -43,7 +43,6 @@ const setup = () => {
 };
 
 describe('asyncDispatch', () => {
-  console.log(asyncDispatch.dispatch);
   it('should return a function', () => {
     const mapAsyncDispatch = {
       loading: null,
