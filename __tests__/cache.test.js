@@ -9,8 +9,8 @@ describe('Cache', () => {
     expect(typeof Cache.contains).toBe('function');
   });
 
-  it('should have a property "cacheAction" and it must be a function', () => {
-    expect(typeof Cache.cacheAction).toBe('function');
+  it('should have a property "cacheActions" and it must be a function', () => {
+    expect(typeof Cache.cacheActions).toBe('function');
   });
 
   it('should have a property "removeAction" and it must be a function', () => {
@@ -18,15 +18,14 @@ describe('Cache', () => {
   });
 
   it('should not add repeated actions', () => {
-    Cache.cacheAction('myAction');
-    Cache.cacheAction('myAction');
+    Cache.cacheActions(['myAction', 'myAction']);
 
     expect(Cache.storage.size).toBe(1);
   });
 
   it('should remove an existing action', () => {
     const actionName = 'myAction';
-    Cache.cacheAction(actionName);
+    Cache.cacheActions([actionName]);
     Cache.removeAction(actionName);
 
     expect(Cache.storage.size).toBe(0);
@@ -38,14 +37,14 @@ describe('Cache', () => {
 
   it('should return true when action removed', () => {
     const actionName = 'myAction';
-    Cache.cacheAction(actionName);
+    Cache.cacheActions([actionName]);
 
     expect(Cache.removeAction(actionName)).toBe(true);
   });
 
   it('should return true when action exists', () => {
     const actionName = 'myAction';
-    Cache.cacheAction(actionName);
+    Cache.cacheActions([actionName]);
 
     expect(Cache.contains(actionName)).toBe(true);
   });

@@ -23,11 +23,11 @@ const setup = () => {
   };
   const mapAsyncDispatchWithErrorFunction = {
     ...loaderAndError,
-    actions: { asyncError }
+    actions: [asyncError]
   };
   const mapAsyncDispatchWithSuccessfulFunction = {
     ...loaderAndError,
-    actions: { asyncFunction }
+    actions: [asyncFunction]
   };
 
   return {
@@ -43,11 +43,12 @@ const setup = () => {
 };
 
 describe('asyncDispatch', () => {
+  console.log(asyncDispatch.dispatch);
   it('should return a function', () => {
     const mapAsyncDispatch = {
       loading: null,
       error: null,
-      actions: {}
+      actions: []
     };
     const result = asyncDispatch(mapAsyncDispatch);
 
@@ -107,10 +108,7 @@ describe('asyncDispatch', () => {
       const mapAsyncDispatch = {
         loading: () => '',
         error: () => '',
-        actions: {
-          action1,
-          action2
-        }
+        actions: [action1, action2]
       };
       const AsyncComponent = asyncDispatch(mapAsyncDispatch)(MyComponent);
 
@@ -123,23 +121,17 @@ describe('asyncDispatch', () => {
     it('should not call an action that has already been called', async () => {
       const { MyComponent, loaderAndError } = setup();
       const action1 = jest.fn();
-      const action2 = jest.fn();
-      const mapAsyncDispatch1 = {
+      const mapAsyncDispatch = {
         ...loaderAndError,
-        actions: { action1 }
+        actions: [action1]
       };
-      const mapAsyncDispatch2 = {
-        ...loaderAndError,
-        actions: { action1: action2 }
-      };
-      const AsyncComponent = asyncDispatch(mapAsyncDispatch1)(MyComponent);
-      const AsyncComponent2 = asyncDispatch(mapAsyncDispatch2)(MyComponent);
+      const AsyncComponent = asyncDispatch(mapAsyncDispatch)(MyComponent);
+      const AsyncComponent2 = asyncDispatch(mapAsyncDispatch)(MyComponent);
 
       await act(async () => render(<AsyncComponent />));
       await act(async () => render(<AsyncComponent2 />));
 
       expect(action1).toHaveBeenCalledTimes(1);
-      expect(action2).not.toHaveBeenCalled();
     });
   });
 });
