@@ -14,11 +14,12 @@ So in the file where you are creating your store, just do this
 
 ```javascript
 // ...reducers, thunk or any imports you have ...
-import asyncConnect from '@mariocadenas/async-dispatcher';
+import { configureDispatcher } from '@mariocadenas/async-dispatcher';
 
 // ... any store reducers and configuration
 const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk)));
-asyncConnect.dispatch = store.dispatch;
+
+configureDispatcher(store);
 
 // ...
 ```
@@ -29,6 +30,7 @@ asynchronous, you just need to do this.
 ```javascript
 import React from 'react';
 import { connect } from 'react-redux';
+import asyncDispatch from '@mariocadenas/async-dispatcher';
 import { fetchTodos } from '@/actions/todos';
 import ToDos from '@/components/todos';
 
@@ -36,11 +38,11 @@ const mapStateToProps = state => ({ todos: state.todos });
 const mapAsyncDispatch = {
   error: e => <div>Error!</div>,
   loading: () => <div>Loading...</div>,
-  actions: { fetchTodos }
+  actions: [fetchTodos]
 };
 const ToDosConnected = connect(mapStateToProps)(ToDos);
 
-export default asyncConnect(mapAsyncDispatch)(ToDosConnected);
+export default asyncDispatch(mapAsyncDispatch)(ToDosConnected);
 ```
 
 While data is being fetched, you will see loading component instead of your component.
