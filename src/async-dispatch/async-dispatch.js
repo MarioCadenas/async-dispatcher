@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Cache from '@/cache';
 
+const isTestingEnvironment = process.env.NODE_ENV === 'test';
+
 function asyncDispatcher(mapAsyncDispatch) {
   const { actions } = mapAsyncDispatch;
 
@@ -56,7 +58,8 @@ export const validator = () => {
 export const configureDispatcher = ({ dispatch = validator() } = {}) =>
   Object.defineProperty(asyncDispatcher, 'dispatch', {
     value: dispatch,
-    ...(process.env.NODE_ENV === 'test' && { writable: true, configurable: true })
+    writable: isTestingEnvironment,
+    configurable: isTestingEnvironment
   });
 
 export default asyncDispatcher;

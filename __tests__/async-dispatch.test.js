@@ -33,9 +33,15 @@ const setup = () => {
     ...loaderAndError,
     actions: [asyncFunction]
   };
-  function foo() {}
-  function bar() {}
-  const dispatch = () => {};
+  function foo() {
+    return () => 'foo';
+  }
+  function bar() {
+    return () => 'bar';
+  }
+  const dispatch = fn => {
+    return fn();
+  };
   const actions = [foo, bar];
 
   return {
@@ -145,7 +151,7 @@ describe('asyncDispatch', () => {
     });
   });
 
-  describe.skip('asyncDispatch mapDispatchToProps', () => {
+  describe('asyncDispatch mapDispatchToProps', () => {
     it('should return an object of mapped actions', () => {
       const { actions, dispatch, foo, bar } = setup();
       const dispatchToProps = mapDispatchToProps(actions, dispatch);
@@ -159,6 +165,14 @@ describe('asyncDispatch', () => {
 
       expect(typeof dispatchToProps.foo).toBe('function');
       expect(typeof dispatchToProps.bar).toBe('function');
+      expect(dispatchToProps.foo()).toBe('foo');
+    });
+
+    it('should be able to call mappedFunctions and get its result', () => {
+      const { actions, dispatch } = setup();
+      const dispatchToProps = mapDispatchToProps(actions, dispatch);
+
+      expect(dispatchToProps.foo()).toBe('foo');
     });
   });
 
