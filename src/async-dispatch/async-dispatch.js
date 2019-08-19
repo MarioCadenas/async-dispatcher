@@ -35,7 +35,9 @@ function asyncDispatcher(mapAsyncDispatch) {
         return mapAsyncDispatch.error(error);
       }
 
-      return <Component loading={loading} error={error} {...props} />;
+      const dispatchToProps = mapDispatchToProps(actions, asyncDispatcher.dispatch);
+
+      return <Component loading={loading} error={error} {...dispatchToProps} {...props} />;
     };
 
     WrappedComponent.displayName = `asyncConnected(${Component.displayName || Component.name})`;
@@ -44,13 +46,17 @@ function asyncDispatcher(mapAsyncDispatch) {
   };
 }
 
-const validator = () => {
+export const mapDispatchToProps = (actions, dispatch) =>
+  actions.reduce((acc, current) => ({ ...acc, [current.name]: () => dispatch(current()) }), {});
+
+export const validator = () => {
   throw new Error('You should pass a valid store object.');
 };
 
 export const configureDispatcher = ({ dispatch = validator() } = {}) =>
   Object.defineProperty(asyncDispatcher, 'dispatch', {
-    value: dispatch
+    value: dispatch,
+    ...(process.env.NODE_ENV === 'test' && { writable: true, configurable: true })
   });
 
 export default asyncDispatcher;

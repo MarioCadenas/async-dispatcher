@@ -1,6 +1,10 @@
 import React from 'react';
 import { render, waitForElement, findByTestId, act } from '@testing-library/react';
-import asyncDispatch from '@/async-dispatch';
+import asyncDispatch, {
+  configureDispatcher,
+  validator,
+  mapDispatchToProps
+} from '@/async-dispatch';
 
 const setup = () => {
   const componentTestId = 'my-component';
@@ -29,6 +33,10 @@ const setup = () => {
     ...loaderAndError,
     actions: [asyncFunction]
   };
+  function foo() {}
+  function bar() {}
+  const dispatch = () => {};
+  const actions = [foo, bar];
 
   return {
     MyComponent,
@@ -38,7 +46,11 @@ const setup = () => {
     timeout,
     loaderAndError,
     mapAsyncDispatchWithErrorFunction,
-    mapAsyncDispatchWithSuccessfulFunction
+    mapAsyncDispatchWithSuccessfulFunction,
+    foo,
+    bar,
+    dispatch,
+    actions
   };
 };
 
@@ -101,12 +113,11 @@ describe('asyncDispatch', () => {
     });
 
     it('should call all passed actions', async () => {
-      const { MyComponent } = setup();
+      const { MyComponent, loaderAndError } = setup();
       const action1 = jest.fn();
       const action2 = jest.fn();
       const mapAsyncDispatch = {
-        loading: () => '',
-        error: () => '',
+        ...loaderAndError,
         actions: [action1, action2]
       };
       const AsyncComponent = asyncDispatch(mapAsyncDispatch)(MyComponent);
@@ -118,11 +129,11 @@ describe('asyncDispatch', () => {
     });
 
     it('should not call an action that has already been called', async () => {
-      const { MyComponent, loaderAndError } = setup();
+      const { MyComponent, loaderAndError, asyncFunction } = setup();
       const action1 = jest.fn();
       const mapAsyncDispatch = {
         ...loaderAndError,
-        actions: [action1]
+        actions: [action1, asyncFunction]
       };
       const AsyncComponent = asyncDispatch(mapAsyncDispatch)(MyComponent);
       const AsyncComponent2 = asyncDispatch(mapAsyncDispatch)(MyComponent);
@@ -131,6 +142,54 @@ describe('asyncDispatch', () => {
       await act(async () => render(<AsyncComponent2 />));
 
       expect(action1).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe.skip('asyncDispatch mapDispatchToProps', () => {
+    it('should return an object of mapped actions', () => {
+      const { actions, dispatch, foo, bar } = setup();
+      const dispatchToProps = mapDispatchToProps(actions, dispatch);
+
+      expect(Object.keys(dispatchToProps)).toEqual(Object.keys({ foo, bar }));
+    });
+
+    it('should have functions in returned object', () => {
+      const { actions, dispatch } = setup();
+      const dispatchToProps = mapDispatchToProps(actions, dispatch);
+
+      expect(typeof dispatchToProps.foo).toBe('function');
+      expect(typeof dispatchToProps.bar).toBe('function');
+    });
+  });
+
+  describe('asyncDispatch configureDispatcher', () => {
+    it('should set dispatch property in asyncDispatch function', () => {
+      const dispatch = () => {};
+      const store = { dispatch };
+
+      delete asyncDispatch.dispatch;
+
+      configureDispatcher(store);
+
+      expect(asyncDispatch).toHaveProperty('dispatch');
+    });
+
+    it('it should throw an error when passed invalid store object', () => {
+      const result = () => configureDispatcher({});
+
+      expect(result).toThrow('You should pass a valid store object.');
+    });
+
+    it('it should throw an error when not passing arguments', () => {
+      const result = () => configureDispatcher();
+
+      expect(result).toThrow('You should pass a valid store object.');
+    });
+  });
+
+  describe('asyncDispatch validator', () => {
+    it('should throw an error when called', () => {
+      expect(validator).toThrow();
     });
   });
 });
