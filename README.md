@@ -30,7 +30,7 @@ export default store;
 
 `mapAsyncDispatch`: `<Object>`
 
-- `error`: Component you want to be show when an error throws. It gets the error object as parameter.
+- `error`: Component you want to be shown when an error throws. It gets the error object as parameter.
 - `loading`: Component that will be displayed while data is being fetched.
 - `actions`: An array of asynchronous actions that your component needs data from. Component will receive
   as props every action so you can call them inside the component to force an update.
