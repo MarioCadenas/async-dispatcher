@@ -8,24 +8,38 @@ npm install @mariocadenas/async-dispatcher
 
 ## Usage
 
-First you will need to configure it to be able to access the dispatch function.
+> You must configure the dispatcher, so it can use the store.dispatch function. To do that, pass the store to the
+> configureDispatcher function.
 
-So in the file where you are creating your store, just do this
+`configureDispatcher`: function that receives the store object
+
+Example of configuration:
 
 ```javascript
-// ...reducers, thunk or any imports you have ...
+// file where you create your store
+// ...
 import { configureDispatcher } from '@mariocadenas/async-dispatcher';
 
-// ... any store reducers and configuration
+// ...
+// random example of store
 const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk)));
-
 configureDispatcher(store);
 
-// ...
+export default store;
 ```
 
-Now, in any component that is connected to the store and will get data that is
-asynchronous, you just need to do this.
+`mapAsyncDispatch`: `<Object>`
+
+- `error`: Component you want to be show when an error throws. It gets the error object as parameter.
+- `loading`: Component that will be displayed while data is being fetched.
+- `actions`: An array of asynchronous actions that your component needs data from. Component will receive
+  as props every action so you can call them inside the component to force an update.
+
+> This object does not replace mapDispatchToProps, if you need to call async functions inside your component
+> you can still do it. This is only for dispatching asynchronous actions that your component needs data from,
+> but is not in the redux store yet.
+
+Example of use:
 
 ```javascript
 import React from 'react';
@@ -43,6 +57,18 @@ const mapAsyncDispatch = {
 const ToDosConnected = connect(mapStateToProps)(ToDos);
 
 export default asyncDispatch(mapAsyncDispatch)(ToDosConnected);
+```
+
+```javascript
+// @/components/todos
+
+const Todos = props => {
+  // Here you can access to loading, error, fetchTodos, todos, any prop you passed.
+  // Any asynchronous action will be here too, so you can force an update ignoring the cache
+  return <button onClick={props.fetchTodos}>Refetch todos!</button>;
+};
+
+export default Todos;
 ```
 
 While data is being fetched, you will see loading component instead of your component.
@@ -106,6 +132,5 @@ We can solve this by fetching all data in the top component, but that is not eff
 
 ## TODO
 
-- [ ] Make an easy way to update cache, so you can decide when to refetch an action.
 - [ ] Improve documentation
-- [ ] Make error and loading properties to be optional, so user can manage it in the component.
+- [ ] Make error and loading properties to be optional, so user can manage them in the component.
