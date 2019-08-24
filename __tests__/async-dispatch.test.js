@@ -8,7 +8,7 @@ import asyncDispatch, {
 
 const setup = () => {
   const componentTestId = 'my-component';
-  const MyComponent = props => <div data-testid={componentTestId}>My super component</div>;
+  const MyComponent = () => <div data-testid={componentTestId}>My super component</div>;
   const timeout = 2500;
   const loaderTestId = 'loading';
   const errorTestId = 'error';
@@ -53,6 +53,7 @@ const setup = () => {
     loaderAndError,
     mapAsyncDispatchWithErrorFunction,
     mapAsyncDispatchWithSuccessfulFunction,
+    asyncFunction,
     foo,
     bar,
     dispatch,
@@ -65,7 +66,7 @@ describe('asyncDispatch', () => {
     const mapAsyncDispatch = {
       loading: null,
       error: null,
-      actions: []
+      actions: [() => {}]
     };
     const result = asyncDispatch(mapAsyncDispatch);
 

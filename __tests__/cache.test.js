@@ -21,10 +21,15 @@ describe('Cache', () => {
     Cache.cacheActions(['myAction', 'myAction']);
 
     expect(Cache.storage.size).toBe(1);
+
+    Cache.cacheActions(['myAction', 'myAction2']);
+
+    expect(Cache.storage.size).toBe(2);
   });
 
   it('should remove an existing action', () => {
     const actionName = 'myAction';
+
     Cache.cacheActions([actionName]);
     Cache.removeAction(actionName);
 
@@ -37,6 +42,7 @@ describe('Cache', () => {
 
   it('should return true when action removed', () => {
     const actionName = 'myAction';
+
     Cache.cacheActions([actionName]);
 
     expect(Cache.removeAction(actionName)).toBe(true);
@@ -51,5 +57,13 @@ describe('Cache', () => {
 
   it('should return false when action does not exist', () => {
     expect(Cache.contains('myAction')).toBe(false);
+  });
+
+  it('should add every action passed', () => {
+    const actions = ['action1', 'action2', 'action3'];
+
+    Cache.cacheActions(actions);
+
+    expect(Cache.storage.size).toBe(3);
   });
 });

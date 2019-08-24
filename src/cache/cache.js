@@ -4,7 +4,8 @@ const Cache = {
     return this.storage.has(action);
   },
   cacheActions(actions) {
-    return this.storage.add(...actions);
+    actions.forEach(action => this.storage.add(action));
+    return this.storage;
   },
   removeAction(action) {
     return this.storage.delete(action);
