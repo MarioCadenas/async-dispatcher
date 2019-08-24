@@ -206,4 +206,18 @@ describe('asyncDispatch', () => {
       expect(validator).toThrow();
     });
   });
+
+  describe('static properties', () => {
+    it('should set static properties in new WrappedComponent', () => {
+      const { MyComponent, mapAsyncDispatchWithSuccessfulFunction } = setup();
+      const myStaticComponentFunction = jest.fn();
+      MyComponent.someStaticProperty = myStaticComponentFunction;
+      const AsyncComponent = asyncDispatch(mapAsyncDispatchWithSuccessfulFunction)(MyComponent);
+
+      AsyncComponent.someStaticProperty();
+
+      expect(AsyncComponent.someStaticProperty).toEqual(myStaticComponentFunction);
+      expect(myStaticComponentFunction).toHaveBeenCalledTimes(1);
+    });
+  });
 });

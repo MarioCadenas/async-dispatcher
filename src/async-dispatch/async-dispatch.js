@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import hoistNonReactStatics from 'hoist-non-react-statics';
 import Cache from '@/cache';
 
 const isTestingEnvironment = process.env.NODE_ENV === 'test';
@@ -43,6 +44,7 @@ function asyncDispatcher(mapAsyncDispatch) {
     };
 
     WrappedComponent.displayName = `asyncConnected(${Component.displayName || Component.name})`;
+    hoistNonReactStatics(WrappedComponent, Component);
 
     return WrappedComponent;
   };
