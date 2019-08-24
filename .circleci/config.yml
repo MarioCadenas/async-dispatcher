@@ -33,27 +33,24 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
 
-      - persist_to_workspace:
-          root: ~/async-dispatcher
-          paths: .
-
   build:
     <<: *defaults
     steps:
-      - attach_workspace:
-          at: ~/async-dispatcher
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
+      - run:
+          name: Npm install
+          command: npm install
       - run:
           name: Build
           command: npm run build
-      - persist_to_workspace:
-          root: ~/async-dispatcher
-          paths: .
 
   publish:
     <<: *defaults
     steps:
-      - attach_workspace:
-          at: ~/async-dispatcher
       - run:
           name: Authenticate with registry
           command: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/async-dispatcher/.npmrc
@@ -66,10 +63,9 @@ workflows:
   test-deploy:
     jobs:
       - test
-      - build
+      - build:
       - publish:
           requires:
-            - test
             - build
           filters:
             tags:
