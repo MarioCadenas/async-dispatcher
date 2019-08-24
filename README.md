@@ -1,5 +1,7 @@
 # Async Dispatcher for Redux Actions
 
+[![CircleCI](https://circleci.com/gh/MarioCadenas/async-dispatcher/tree/master.svg?style=svg)](https://circleci.com/gh/MarioCadenas/async-dispatcher/tree/master)
+
 ## Install
 
 ```bash
