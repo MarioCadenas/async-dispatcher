@@ -1,6 +1,6 @@
 {
   "name": "@mariocadenas/async-dispatcher",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Higher Order Component to easily manage asynchronous redux actions",
   "keywords": [
     "react",
