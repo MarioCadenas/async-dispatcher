@@ -3,7 +3,8 @@ import { render, waitForElement, findByTestId, act } from '@testing-library/reac
 import asyncDispatch, {
   configureDispatcher,
   validator,
-  mapDispatchToProps
+  mapDispatchToProps,
+  useAsyncDispatch
 } from '@/async-dispatch';
 
 const setup = () => {
@@ -219,6 +220,28 @@ describe('asyncDispatch', () => {
 
       expect(AsyncComponent.someStaticProperty).toEqual(myStaticComponentFunction);
       expect(myStaticComponentFunction).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('hooks', () => {
+    it('should work with hooks', async () => {
+      const MyComponent = props => {
+        const myActionOne = () => Promise.resolve({ foo: 1 });
+        const { data, loading, error } = useAsyncDispatch([myActionOne]);
+
+        if (loading && !error) {
+          return 'loading';
+        }
+
+        if (error) {
+          return 'error';
+        }
+
+        return <p>{data}</p>;
+      };
+
+      const { container } = render(<MyComponent />);
+      console.log(container.outerHTML);
     });
   });
 });

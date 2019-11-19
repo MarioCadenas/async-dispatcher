@@ -19,7 +19,7 @@ function asyncDispatcher(mapAsyncDispatch) {
         async function dispatchAsyncActions() {
           try {
             const dispatchedActions = actionsToCall.map(async action =>
-              asyncDispatcher.dispatch(action())
+              asyncDispatcher.dispatch.apply(null, action())
             );
             await Promise.all(dispatchedActions);
             setLoading(false);
@@ -31,11 +31,11 @@ function asyncDispatcher(mapAsyncDispatch) {
       }, [setLoading, setError]);
 
       if (loading && !error) {
-        return mapAsyncDispatch.loading();
+        return mapAsyncDispatch.loading.apply();
       }
 
       if (error) {
-        return mapAsyncDispatch.error(error);
+        return mapAsyncDispatch.error.apply(null, error);
       }
 
       const dispatchToProps = mapDispatchToProps(actions, asyncDispatcher.dispatch);
