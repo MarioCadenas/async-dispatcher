@@ -1,13 +1,13 @@
 const Cache = {
   storage: new Set(),
-  contains(action) {
+  contains(action: Function) {
     return this.storage.has(action);
   },
-  cacheActions(actions) {
-    actions.forEach(action => this.storage.add(action));
+  cacheActions(actions: Array<Function>) {
+    actions.forEach((action: Function) => this.storage.add(action));
     return this.storage;
   },
-  removeAction(action) {
+  removeAction(action: Function) {
     return this.storage.delete(action);
   }
 };

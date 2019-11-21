@@ -1,13 +1,15 @@
 module.exports = {
   verbose: true,
-  transform: {
-    '^.+\\.jsx?$': 'babel-jest'
+  testMatch: [
+    "**/__tests__/**/*.+(ts|tsx|js)",
+    "**/?(*.)+(spec|test).+(ts|tsx|js)"
+  ],
+  "transform": {
+    "^.+\\.(ts|tsx)?$": "ts-jest"
   },
   collectCoverage: true,
-  collectCoverageFrom: ['src/**/*.{js,jsx}'],
+  collectCoverageFrom: ['src/**/*.{ts,tsx,js,jsx}'],
   testPathIgnorePatterns: ['<rootDir>/node_modules/'],
-  testMatch: ['<rootDir>/**/?(*.)(spec|test).js?(x)'],
-  setupFilesAfterEnv: ['<rootDir>/__tests__/config/jest.setup.js'],
   moduleNameMapper: {
     '@/(.*)$': '<rootDir>/src/$1'
   }
